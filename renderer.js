@@ -2,7 +2,7 @@ let nextBtn, previousBtn, closeBtn, clearBtn;
 let canvas;
 let ctx;
 
-let colorArray = ["#F00", "#0F0","#00F"]
+let colorArray = ["#000","#F00","#00F", "#FFF", "#008200","#00bf00","#0F0","#00ffff", "#ff00ff","#ffff00"]
 let cSel = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -66,7 +66,7 @@ function fixPosition(e, gCanvasElement) {
 
 function next(){
     console.log("next pressed");
-    if(cSel == colorArray.length)
+    if(cSel == colorArray.length-1)
     {
         cSel = 0;
         setColor(cSel);
@@ -74,7 +74,6 @@ function next(){
         cSel++;
         setColor(cSel);
     }
-    
 };
 
 function previous(){
@@ -94,4 +93,3 @@ function setColor(value)
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 }
-
