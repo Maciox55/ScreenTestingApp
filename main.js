@@ -39,8 +39,7 @@ const createWindow = () => {
       if(args == 'getFile')
       {
       console.log(args);
-
-        fs.readFile("./tests.json", (error, data) => {
+        fs.readFile(path.join(__dirname, 'tests.json'), (error, data) => {
             console.log(args);
 
             win.webContents.send("fromMain", JSON.parse(data));

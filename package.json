@@ -7,38 +7,20 @@
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dist": " electron-builder build",
-    "pack": "build --dir"
+    "pack": "electron-builder build --dir"
   },
   "author": "Maciej Bregisz",
   "license": "ISC",
   
   "build": {
+    "includeSubNodeModules": true,
     "appId": "ScreenTesting",
-    "dmg": {
-      "contents": [
-        {
-          "x": 110,
-          "y": 150
-        },
-        {
-          "x": 240,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
-    },
     "win": {
       "target": "portable"
     }
   },
   "dependencies": {
+    
     "electron-reload": "^2.0.0-alpha.1"
   },
   "devDependencies": {
