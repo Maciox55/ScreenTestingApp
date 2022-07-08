@@ -14,21 +14,76 @@ canvas{
     margin: 0;
     height: 100%;
     background-color: #000;
-}
-.absolute{
-
-}
-.buttons{
-    display: flex;
-    flex-direction: row;
-    bottom: 32px;
-    align-items: center;
-    position:absolute;
-    align-content: space-between;
     
 }
 
-button{
-    width: 150px;
-    height: 64px;
+.buttons{
+    flex: 1 1 auto;
+    display: flex;
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
 }
+#buttons{
+    display: flex;
+    pointer-events: none;
+    gap: 5px;
+    margin-bottom: 64px;
+    align-content: space-between;
+}
+p{
+    padding: 5px;
+    text-shadow:
+    0.07em 0 rgb(255, 255, 255),
+    0 0.07em rgb(255, 255, 255),
+    -0.07em 0 rgb(255, 255, 255),
+    0 -0.07em rgb(255, 255, 255);
+}
+button{
+    backdrop-filter: blur(1px);
+    background-color: rgba(255, 255, 255, 0.473);
+
+    border: none;
+    /* border: 1px solid #999; */
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    pointer-events:all;
+    filter: invert(25%);
+    
+    
+    width: 100px;
+    height: 64px;
+    text-shadow:
+        0.07em 0 black,
+        0 0.07em black,
+        -0.07em 0 black,
+        0 -0.07em black;
+}
+
+.ignore{
+    pointer-events:none;
+    width:64px;
+}
+
+.hidden{
+    animation: fadeout 0.5s;
+}
+
+/* Animations */
+@keyframes fadeout {
+    0% {opacity: 100%;}
+    100% {opacity: 0%; display: none;}
+  }
+
+  @keyframes fadein {
+    0% {opacity: 0%;}
+    100% {opacity: 1000%; display: block;}
+  }

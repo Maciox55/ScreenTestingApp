@@ -40,8 +40,6 @@ const createWindow = () => {
       {
       console.log(args);
         fs.readFile(path.join(__dirname, 'tests.json'), (error, data) => {
-            console.log(args);
-
             win.webContents.send("fromMain", JSON.parse(data));
           });
       } else if(args == 'exit')

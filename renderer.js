@@ -1,8 +1,9 @@
 let nextBtn, previousBtn, closeBtn, clearBtn, brushBtn;
+let buttonElement;
 let canvas;
 let ctx;
 let selLabel;
-let brushSizes = [1,2,4,8,12,24];
+let brushSizes = [2,4,8,12,24];
 let currentBrush = 0;
 
 let cSel = 0;
@@ -19,7 +20,7 @@ const fillStyle = '#FFF';
 const strokeStyle = '#FFF';
 const shadowColor = '#FFF';
 const shadowBlur = lineWidth / 4;
-const scale = 2;
+const scale = 1;
 
 var tests;
 window.addEventListener('DOMContentLoaded',()=>{
@@ -45,6 +46,8 @@ window.addEventListener('load', () => {
     selLabel = document.getElementById("testNum");
     brushBtn = document.getElementById("incBrush");
     brushBtn.addEventListener('click',incBrush);
+    buttonElement = document.getElementById("buttons");
+
 
     canvas = document.getElementById("main");
     ctx = canvas.getContext('2d');
@@ -71,7 +74,7 @@ function handleWritingStart(event) {
   event.preventDefault();
 
   const mousePos = getMosuePositionOnCanvas(event);
-  
+  buttonElement.style.display = "none"
   ctx.beginPath();
 
   ctx.moveTo(mousePos.x, mousePos.y);
@@ -80,6 +83,7 @@ function handleWritingStart(event) {
   ctx.strokeStyle = strokeStyle;
   ctx.shadowColor = shadowColor;
   ctx.shadowBlur = shadowBlur;
+
 
   ctx.fill();
   
@@ -98,8 +102,11 @@ function handleWritingInProgress(event) {
 }
 
 function handleDrawingEnd(event) {
+
   event.preventDefault();
-  
+
+  buttonElement.style.display = "flex";
+
   if (state.mousedown) {
     ctx.shadowColor = shadowColor;
     ctx.shadowBlur = shadowBlur;
@@ -248,7 +255,7 @@ function handleTest(test){
                     break;
             }
             break;
-            
+
     }
 }
 
