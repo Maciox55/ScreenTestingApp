@@ -1,9 +1,25 @@
-let nextBtn, previousBtn, closeBtn, clearBtn;
+let nextBtn, previousBtn, closeBtn, clearBtn, brushBtn;
 let canvas;
 let ctx;
 let selLabel;
+let brushSizes = [1,2,4,8,12,24];
+let currentBrush = 0;
 
 let cSel = 0;
+const state = {
+  mousedown: false
+};
+
+    // ===================
+// == Configuration ==
+// ===================
+let lineWidth = brushSizes[currentBrush];
+const halfLineWidth = lineWidth / 2;
+const fillStyle = '#FFF';
+const strokeStyle = '#FFF';
+const shadowColor = '#FFF';
+const shadowBlur = lineWidth / 4;
+const scale = 2;
 
 var tests;
 window.addEventListener('DOMContentLoaded',()=>{
@@ -14,8 +30,6 @@ window.addEventListener('DOMContentLoaded',()=>{
     });
 
 })
-
-
 
 window.addEventListener('load', () => {
 
@@ -29,36 +43,88 @@ window.addEventListener('load', () => {
     clearBtn = document.getElementById("clear")
     clearBtn.addEventListener('click',clear)
     selLabel = document.getElementById("testNum");
+    brushBtn = document.getElementById("incBrush");
+    brushBtn.addEventListener('click',incBrush);
 
     canvas = document.getElementById("main");
     ctx = canvas.getContext('2d');
 
-    ctx.canvas.width  = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
+    ctx.canvas.width  = window.innerWidth*scale;
+    ctx.canvas.height = window.innerHeight*scale;
 
-    var mousedown = false;
-    ctx.strokeStyle = '#FFFFFF';
-    ctx.lineWidth = 0.5;
-    canvas.onmousedown = function(e) {
-        var pos = fixPosition(e, canvas);
-        mousedown = true;
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-        return false;
-    };
 
-    canvas.onmousemove = function(e) {
-        var pos = fixPosition(e, canvas);
-        if (mousedown) {
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-        }
-    };
+    canvas.addEventListener('mousedown', handleWritingStart);
+    canvas.addEventListener('mousemove', handleWritingInProgress);
+    canvas.addEventListener('mouseup', handleDrawingEnd);
+    canvas.addEventListener('mouseout', handleDrawingEnd);
 
-    canvas.onmouseup = function(e) {
-        mousedown = false;
-    };
+    canvas.addEventListener('touchstart', handleWritingStart);
+    canvas.addEventListener('touchmove', handleWritingInProgress);
+    canvas.addEventListener('touchend', handleDrawingEnd);
+
+
+    
 });
+
+
+function handleWritingStart(event) {
+  event.preventDefault();
+
+  const mousePos = getMosuePositionOnCanvas(event);
+  
+  ctx.beginPath();
+
+  ctx.moveTo(mousePos.x, mousePos.y);
+  ctx.lineCap = 'round';
+  ctx.lineWidth = lineWidth;
+  ctx.strokeStyle = strokeStyle;
+  ctx.shadowColor = shadowColor;
+  ctx.shadowBlur = shadowBlur;
+
+  ctx.fill();
+  
+  state.mousedown = true;
+}
+
+function handleWritingInProgress(event) {
+  event.preventDefault();
+  
+  if (state.mousedown) {
+    const mousePos = getMosuePositionOnCanvas(event);
+
+    ctx.lineTo(mousePos.x, mousePos.y);
+    ctx.stroke();
+  }
+}
+
+function handleDrawingEnd(event) {
+  event.preventDefault();
+  
+  if (state.mousedown) {
+    ctx.shadowColor = shadowColor;
+    ctx.shadowBlur = shadowBlur;
+
+    ctx.stroke();
+  }
+  
+  state.mousedown = false;
+}
+
+function handleClearButtonClick(event) {
+  event.preventDefault();
+  
+  clearCanvas();
+}
+
+function getMosuePositionOnCanvas(event) {
+  const clientX = event.clientX || event.touches[0].clientX;
+  const clientY = event.clientY || event.touches[0].clientY;
+  const { offsetLeft, offsetTop } = event.target;
+  const canvasX = clientX - offsetLeft;
+  const canvasY = clientY - offsetTop;
+
+  return { x: canvasX*scale, y: canvasY*scale };
+}
 
 function fixPosition(e, gCanvasElement) {
     var x;
@@ -182,8 +248,19 @@ function handleTest(test){
                     break;
             }
             break;
-
-
             
     }
+}
+
+function incBrush(){
+    if(currentBrush == brushSizes.length-1)
+    {
+        currentBrush = 0;
+    }else{
+        currentBrush++;
+    }
+    brushBtn.innerHTML = "Brush " + brushSizes[currentBrush] + "px";
+    lineWidth=brushSizes[currentBrush]
+
+
 }
