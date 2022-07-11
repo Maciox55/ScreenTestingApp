@@ -100,21 +100,6 @@ function handleWritingStart(event) {
    fingers[i].previousPos = getMosuePositionOnCanvas(fingers[i]);
 
   }
-//   console.log(fingers);
-//    console.log(event.touches);
- 
-
-// const mousePos = getMosuePositionOnCanvas(event);
-
-//   ctx.moveTo(mousePos.x, mousePos.y);
-//   ctx.lineCap = 'round';
-//   ctx.lineWidth = lineWidth;
-//   ctx.strokeStyle = strokeStyle;
-//   ctx.shadowColor = shadowColor;
-//   ctx.shadowBlur = shadowBlur;
-
-
-//   ctx.fill();
   
   state.mousedown = true;
 }
@@ -122,24 +107,19 @@ function handleWritingStart(event) {
 function handleWritingInProgress(event) {
   event.preventDefault();
   
-//   console.log("test")
- 
-
       for(let i=0; i<event.touches.length;i++){
             if(fingers[i].drawing)
             {
                 const mousePos = getMosuePositionOnCanvas(event.touches[i]);
-            
+                fingers[i].drawing=true;
                 ctx.moveTo(fingers[i].previousPos.x, fingers[i].previousPos.y);
                 ctx.lineTo(mousePos.x, mousePos.y);
                 ctx.stroke();
                 fingers[i].previousPos = getMosuePositionOnCanvas(event.touches[i]);
             
             }
-            // console.log("Finger " + i + "  : "+fingers[i].drawing);
+            
     }
-
-    // console.log(fingers[0].drawing);
 
   
 }
@@ -147,12 +127,19 @@ function handleWritingInProgress(event) {
 function handleDrawingEnd(event) {
 
     event.preventDefault();
-    
-    // console.log(fingers[0]);
-    fingers[event.changedTouches[0].identifier].drawing = false;
-    // console.log(fingers[0]);
-    // console.log(event);
+    // fingers[event.changedTouches[0].identifier].drawing = false;
+    // fingers.pop();
     ctx.stroke();
+    if(event.touches.length != 0)
+    {
+        // console.log(event);
+        for(let i =0; i<event.touches.length; i++)
+        {
+            // fingers[i] = event.touches[i];
+            fingers[i].previousPos = getMosuePositionOnCanvas(event.touches[i]);
+        }
+
+    }
     buttonElement.style.display = "flex";
 }
 
@@ -226,6 +213,7 @@ function close(){
 function clear(){
     cSel=0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    fingers =[];
 };
 
 function setColor(value)
