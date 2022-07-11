@@ -127,8 +127,7 @@ function handleWritingInProgress(event) {
 function handleDrawingEnd(event) {
 
     event.preventDefault();
-    // fingers[event.changedTouches[0].identifier].drawing = false;
-    // fingers.pop();
+
     ctx.stroke();
     if(event.touches.length != 0)
     {
@@ -140,7 +139,9 @@ function handleDrawingEnd(event) {
         }
 
     }
-    buttonElement.style.display = "flex";
+    else{
+        buttonElement.style.display = "flex";
+    }
 }
 
 function handleClearButtonClick(event) {
