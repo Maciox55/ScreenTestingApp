@@ -22,6 +22,8 @@ const shadowColor = '#FFF';
 const shadowBlur = lineWidth / 4;
 const scale = 1;
 
+let fingers = [];
+
 var tests;
 window.addEventListener('DOMContentLoaded',()=>{
     window.api.send("toMain", "getFile");
@@ -56,10 +58,10 @@ window.addEventListener('load', () => {
     ctx.canvas.height = window.innerHeight*scale;
 
 
-    canvas.addEventListener('mousedown', handleWritingStart);
-    canvas.addEventListener('mousemove', handleWritingInProgress);
-    canvas.addEventListener('mouseup', handleDrawingEnd);
-    canvas.addEventListener('mouseout', handleDrawingEnd);
+    // canvas.addEventListener('mousedown', handleWritingStart);
+    // canvas.addEventListener('mousemove', handleWritingInProgress);
+    // canvas.addEventListener('mouseup', handleDrawingEnd);
+    // canvas.addEventListener('mouseout', handleDrawingEnd);
 
     canvas.addEventListener('touchstart', handleWritingStart);
     canvas.addEventListener('touchmove', handleWritingInProgress);
@@ -72,20 +74,47 @@ window.addEventListener('load', () => {
 
 function handleWritingStart(event) {
   event.preventDefault();
+  buttonElement.style.display = "none";
+  
 
-  const mousePos = getMosuePositionOnCanvas(event);
-  buttonElement.style.display = "none"
+  fingers=[];
   ctx.beginPath();
+  for(let i=0; i<event.touches.length;i++)
+  {
+    
+    // fingers[i]["state"] = true;
+    fingers.push(event.touches[i]);
+    fingers[i].drawing=true;
+    
+    const mousePos = getMosuePositionOnCanvas(event.touches[i]);
+    ctx.beginPath();
+    // console.log(event.touches);
 
-  ctx.moveTo(mousePos.x, mousePos.y);
-  ctx.lineCap = 'round';
-  ctx.lineWidth = lineWidth;
-  ctx.strokeStyle = strokeStyle;
-  ctx.shadowColor = shadowColor;
-  ctx.shadowBlur = shadowBlur;
+   ctx.moveTo(mousePos.x, mousePos.y);
+   ctx.lineCap = 'round';
+   ctx.lineWidth = lineWidth;
+   ctx.strokeStyle = strokeStyle;
+   ctx.shadowColor = shadowColor;
+   ctx.shadowBlur = shadowBlur;
+   ctx.fill();
+   fingers[i].previousPos = getMosuePositionOnCanvas(fingers[i]);
+
+  }
+//   console.log(fingers);
+//    console.log(event.touches);
+ 
+
+// const mousePos = getMosuePositionOnCanvas(event);
+
+//   ctx.moveTo(mousePos.x, mousePos.y);
+//   ctx.lineCap = 'round';
+//   ctx.lineWidth = lineWidth;
+//   ctx.strokeStyle = strokeStyle;
+//   ctx.shadowColor = shadowColor;
+//   ctx.shadowBlur = shadowBlur;
 
 
-  ctx.fill();
+//   ctx.fill();
   
   state.mousedown = true;
 }
@@ -93,28 +122,38 @@ function handleWritingStart(event) {
 function handleWritingInProgress(event) {
   event.preventDefault();
   
-  if (state.mousedown) {
-    const mousePos = getMosuePositionOnCanvas(event);
+//   console.log("test")
+ 
 
-    ctx.lineTo(mousePos.x, mousePos.y);
-    ctx.stroke();
-  }
+      for(let i=0; i<event.touches.length;i++){
+            if(fingers[i].drawing)
+            {
+                const mousePos = getMosuePositionOnCanvas(event.touches[i]);
+            
+                ctx.moveTo(fingers[i].previousPos.x, fingers[i].previousPos.y);
+                ctx.lineTo(mousePos.x, mousePos.y);
+                ctx.stroke();
+                fingers[i].previousPos = getMosuePositionOnCanvas(event.touches[i]);
+            
+            }
+            // console.log("Finger " + i + "  : "+fingers[i].drawing);
+    }
+
+    // console.log(fingers[0].drawing);
+
+  
 }
 
 function handleDrawingEnd(event) {
 
-  event.preventDefault();
-
-  buttonElement.style.display = "flex";
-
-  if (state.mousedown) {
-    ctx.shadowColor = shadowColor;
-    ctx.shadowBlur = shadowBlur;
-
+    event.preventDefault();
+    
+    // console.log(fingers[0]);
+    fingers[event.changedTouches[0].identifier].drawing = false;
+    // console.log(fingers[0]);
+    // console.log(event);
     ctx.stroke();
-  }
-  
-  state.mousedown = false;
+    buttonElement.style.display = "flex";
 }
 
 function handleClearButtonClick(event) {
@@ -124,6 +163,7 @@ function handleClearButtonClick(event) {
 }
 
 function getMosuePositionOnCanvas(event) {
+    // console.log(event);
   const clientX = event.clientX || event.touches[0].clientX;
   const clientY = event.clientY || event.touches[0].clientY;
   const { offsetLeft, offsetTop } = event.target;
@@ -227,9 +267,7 @@ function handleTest(test){
                     }
 
                     break;
-
             }
-            
             break;
 
         case "gradient":
@@ -255,7 +293,6 @@ function handleTest(test){
                     break;
             }
             break;
-
     }
 }
 
