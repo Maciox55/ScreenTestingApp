@@ -6,24 +6,27 @@
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dist": " electron-builder build",
-    "pack": "electron-builder build --dir"
+    "dist": " electron-builder"
   },
   "author": "Maciej Bregisz",
   "license": "ISC",
-  
   "build": {
-    "includeSubNodeModules": true,
     "appId": "ScreenTesting",
+    "includeSubNodeModules": true,
     "win": {
-      "target": "portable"
+      "icon": "build/Icon.png",
+      "target": ["portable"]
+    },
+    "portable": {
+        "artifactName": "ScreenTest.exe"
     }
+    
   },
   "dependencies": {
     
-    "electron-reload": "^2.0.0-alpha.1"
   },
   "devDependencies": {
+    "electron": "^19.0.8",
     "electron-builder": "^23.1.0",
     "electron-reload": "^2.0.0-alpha.1"
   }
