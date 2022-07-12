@@ -57,7 +57,7 @@ Install dependencies...<br/>
 ```
 npm install
 ```
-Make changes, create <br/>
+Make changes, add tests, etc... <br/>
 Build...<br/>
 ```
 npm run dist
